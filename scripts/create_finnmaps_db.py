@@ -59,6 +59,38 @@ def execute_sql(db_file,sql,return_result=False):
         return result
     conn.close()
     
+'''create_edit_session_tables was missing from OG code. it is listed in scripts/refresh_edit_session_tables.py so it was created here
+'''
+def create_edit_session_tables(db_file):
+    """
+    Drops and recreates the edit_sessions and added_places tables in the database.
+
+    Args:
+        db_file (str): Path to the database file.
+    """
+    conn = sqlite3.connect(db_file)
+    cursor = conn.cursor()
+    
+    # Drop tables if they exist
+    cursor.execute("DROP TABLE IF EXISTS edit_sessions")
+    cursor.execute("DROP TABLE IF EXISTS added_places")
+    
+    # Recreate tables
+    session_sql = """
+                  CREATE TABLE IF NOT EXISTS edit_sessions (
+                  key text unique primary key);
+                  """
+    added_sql = """
+                CREATE TABLE IF NOT EXISTS added_places (
+                oid integer, key text);
+                """
+    
+    cursor.execute(session_sql)
+    cursor.execute(added_sql)
+    
+    conn.commit()
+    conn.close()
+    
 
 if __name__ == "__main__":
     wdir = os.path.dirname(os.path.dirname(os.path.realpath(__file__)))

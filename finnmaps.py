@@ -11,7 +11,7 @@ import os,sqlite3,json,phonenumbers,logging,sys,uuid,requests,smtplib,ssl,re
 from email_validator import validate_email, EmailNotValidError
 from phonenumbers.phonenumberutil import NumberParseException
 from configparser import ConfigParser
-from arcgis  import GIS
+from arcgis import GIS
 from arcgis import geometry,features
 from email.mime.text import MIMEText
 import time
@@ -77,20 +77,19 @@ def notify_users(sender_email,password,db_file,msg_body,url="https://finnmaps.or
                 server.sendmail(sender_email,email,msg=msg.as_string())
 
 
-def get_token(username,password,expiration=60):
-
-    """ Generate a token for AGOL """
+def get_token(expiration=60):
+    """ Generate a token for AGOL using credentials from config.ini """
 
     data = {
         'f': 'json',
-        'username': username,
-        'password': password,
-        'referer' : 'https://www.arcgis.com',
+        'username': config.get('GIS_VAR', 'agol_user'),
+        'password': config.get('GIS_VAR', 'agol_pw'),
+        'referer': config.get('GIS_VAR', 'agol_url'),
         'expiration': expiration
-        }
+    }
 
-    url  = 'https://www.arcgis.com/sharing/rest/generateToken'
-    jres = requests.post(url, data=data, verify = True).json()
+    url = 'https://www.arcgis.com/sharing/rest/generateToken'
+    jres = requests.post(url, data=data, verify=True).json()
     return jres['token']
 
 
@@ -107,11 +106,11 @@ def check_number(number,region=None):
         logger.warning(e)
 
 
-def add_feature(coords,fl,placename,placetype):
+def add_feature(coords,fl,placeName,placeType):
     """ Add feature using the arcgis for python api"""
     geom=geometry.Point(coords)
     feature = features.Feature(geometry=geom,
-                               attributes={'name':placename,'type':placetype})
+                               attributes={'name':placeName,'type':placeType})
     resp = fl.edit_features(adds=[feature])
     logger.info(resp)
     return resp['addResults'][0]['objectId']
@@ -130,8 +129,10 @@ def init_gis(username,password,portal_url,hfl_id):
     gis = GIS(portal_url,username,password)
     logger.info("Finished Connecting...Getting the HFL")
     hfl = gis.content.get(hfl_id)
+    logger.info(f"Retrieved HFL: {hfl}")  # This line prints the hfl variable
     fl = hfl.layers[0]
     visit_table = hfl.tables[0]
+    logger.info(f"Retrieved Visit Table: {visit_table}")  # Log the visit_table information
     return fl,visit_table
 
 
@@ -349,5 +350,5 @@ def agol_webhook():
         logger.error("",exc_info=True)
 
 if __name__ == '__main__':
-    application.run(port=80)
+    application.run(port=8080)
     #application.run(host="0.0.0.0")

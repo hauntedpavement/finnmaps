@@ -224,7 +224,7 @@ require([
        prevVisitButton.style.display = "inline-flex";
        nextAttachButton.style.display = "inline-flex";
        prevAttachButton.style.display = "inline-flex";
-       visitDate.innerHTML = relatedData[relatedDataKeys[0]].date_of_visit;
+       visitDate.innerHTML = relatedData[relatedDataKeys[0]].visitDate;
      };
 
 
@@ -255,7 +255,7 @@ require([
        let visit = relatedData[relatedDataKeys[next_idx]]
        tick_info.replaceWith(visit.tick_info);
        visit_paragraph.replaceWith(visit.visit_paragraph);
-       visitDate.innerHTML = visit.date_of_visit;
+       visitDate.innerHTML = visit.visitDate;
        // One last check, need to make sure we actually have attachments for the current visit.
        // if not then the noImgVid element stores some text to let the user know.
        if(!(visit.attachments.length === 0)) {
@@ -288,7 +288,7 @@ require([
       let visit = relatedData[relatedDataKeys[next_idx]]
       tick_info.replaceWith(visit.tick_info);
       visit_paragraph.replaceWith(visit.visit_paragraph);
-      visitDate.innerHTML = visit.date_of_visit;
+      visitDate.innerHTML = visit.visitDate;
       // One last check, need to make sure we actually have attachments for the current visit.
       // if not then the noImgVid element stores some text to let the user know.
       if(!(visit.attachments.length === 0)) {
@@ -423,7 +423,7 @@ require([
        }).then(function(objectId) {
            // Query the for the related features for the features ids found
            return finnPlaces.queryRelatedFeatures({
-             outFields: ["OBJECTID","date_of_visit","ticks_found","num_ticks_found","note","Photos And Files"],
+             outFields: ["OBJECTID","visitDate","note","Photos And Files"],
              relationshipId: finnPlaces.relationships[0].id,
              objectIds: objectId
            });
@@ -440,7 +440,7 @@ require([
              // add an element to the DOM containing it.
              relatedFeatureSet.features.map(function (feature) {
 
-               let visit_date = feature.attributes.date_of_visit;
+               let visit_date = feature.attributes.visitDate;
                let date = new Date(visit_date)
                let formatted_date = `${date.getFullYear()}-${date.getMonth()+1}-${date.getDate()}`;
                let oid = feature.attributes.OBJECTID
@@ -448,7 +448,7 @@ require([
                let num_ticks_found = feature.attributes.num_ticks_found
                let note = feature.attributes.note
 
-               relatedData[oid] = {date_of_visit:formatted_date,
+               relatedData[oid] = {visitDate:formatted_date,
                                   ticks_found:ticks_found,
                                   num_ticks_found:num_ticks_found,
                                   note:note,

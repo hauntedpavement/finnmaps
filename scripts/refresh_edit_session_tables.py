@@ -1,4 +1,4 @@
-import sys,os
+import sys, os
 wdir = os.path.dirname(__file__)
 sys.path.insert(1,wdir)
 from create_finnmaps_db import create_edit_session_tables, execute_sql

@@ -11,3 +11,4 @@ scripts/__pycache__/finnmaps_db_helpers.cpython-36.pyc
 *.pyc
 finnmaps.ini
 wsgi.py
+myapp.py

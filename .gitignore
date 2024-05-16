@@ -1,14 +1,12 @@
 finnmaps.code-workspace
 *.db
 config.ini
-fmvenv/
+myenv/
 log/
 log/log.txt
 .gitignore
-.DS_Store
 .vscode/settings.json
 scripts/__pycache__/finnmaps_db_helpers.cpython-36.pyc
 *.pyc
 finnmaps.ini
 wsgi.py
-myapp.py
